@@ -1,0 +1,13 @@
+type UserMonitoring {
+  id: Int!
+  userId: Int!
+  description: String!
+  usage: Int!
+  createdAt: String!
+}
+
+extend type Query {
+  getUserMonitoring(email: String!, startDate: String!, endDate: String!): [UserMonitoring!]!
+  getTopUsersByMonitoring(startDate: String!, endDate: String!): [User!]!
+  getTopUsersByEventType(countryId: Int!, eventType: String!, startDate: String!, endDate: String!): [User!]!
+}

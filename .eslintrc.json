@@ -1,0 +1,20 @@
+{
+  "extends": "standard-with-typescript",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ],
+    "@typescript-eslint/semi": [
+      2,
+      "always"
+    ]
+  },
+	"ignorePatterns": [
+    "dist",
+    "src/**/*.js"
+  ]
+}

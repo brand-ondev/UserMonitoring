@@ -1,0 +1,27 @@
+type User {
+  id: Int!
+  email: String!
+  role: Role!
+  countries: [Country!]!
+  userMonitoring: [UserMonitoring!]!
+}
+
+type Role {
+  id: Int!
+  name: String!
+}
+
+input UserInput {
+  email: String!
+  roleId: Int!
+}
+
+extend type Query {
+  getUserByEmail(email: String!): User
+  getAllUsers: [User!]!
+  User(id: Int!): User
+}
+
+extend type Mutation {
+  createUser(data: UserInput!): User!
+}
