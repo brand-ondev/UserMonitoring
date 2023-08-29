@@ -1,13 +1,15 @@
 type UserMonitoring {
-  id: Int!
-  userId: Int!
+  id: String!
+  userId: String!
   description: String!
   usage: Int!
   createdAt: String!
 }
 
+union GetUserMonitoring = UserMonitoring | InvalidEmailError | InvalidDateError | NotFoundError
+
 extend type Query {
-  getUserMonitoring(email: String!, startDate: String!, endDate: String!): [UserMonitoring!]!
-  getTopUsersByMonitoring(startDate: String!, endDate: String!): [User!]!
-  getTopUsersByEventType(countryId: Int!, eventType: String!, startDate: String!, endDate: String!): [User!]!
+  getUserMonitoring(email: String!, startDate: String!, endDate: String!): [GetUserMonitoring!]!
+  getTopUsersByMonitoring(startDate: String!, endDate: String!): [GetUserResult!]!
+  getTopUsersByEventType(countryId: String!, eventType: String!, startDate: String!, endDate: String!): [GetUserResult!]!
 }

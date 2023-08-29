@@ -1,27 +1,29 @@
 import { createUser } from "graphql/mutations/createUser.mutation";
+import UserService from "services/user.service";
 
 const userResolvers = {
   Query: {
     getUserByEmail: async ({ email }: any) => {
-      // return prisma.user.findUnique({ where: { email } });
+      return await UserService.getUserByEmail(email);
     },
-    getAllUsers: async () => {
-      // return prisma.user.findMany();
-    },
-    User: {
-      countries: async (parent: any) => {
-        // return prisma.user.findUnique({ where: { id: parent.id } }).countries();
-      },
-      userMonitoring: async (parent: any) => {
-        // return prisma.user.findUnique({ where: { id: parent.id } }).userMonitoring();
-      },
-      role: async ( parent: any) => {
-        // return prisma.user.findUnique({ where: { id: parent.id } }).role();
-      },
+    getAllUsers: async (_: any): Promise<any> => {
+      console.log('getAllUsers');
+      return await UserService.getAllUsers();
     },
   },
   Mutation: {
     createUser: createUser,
+  },
+  User: {
+    countries: async (parent: any) => {
+      return await UserService.getCountryByUserId(parent.id);
+    },
+    role: async (parent: any) => {
+      return await UserService.getRoleByUserId(parent.id);
+    },
+    userMonitoring: async (parent: any) => {
+      return await UserService.getUserMonitoringByUserId(parent.id);
+    }
   },
 };
 

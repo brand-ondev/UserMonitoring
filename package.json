@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "ts-node -r tsconfig-paths/register ./src/server/start.ts",
+    "start:dev": "nodemon --exec ts-node  -r tsconfig-paths/register ./src/server/start.ts",
     "start:prod": "ts-node -r tsconfig-paths/register ./src/server/start.ts",
     "build": "tsc",
     "prisma": "npx prisma migrate dev --name init",
-    "prisma:generate": "npx prisma generate",
+    "prisma:generate": "npx prisma generate --schema=./src/db/schema.prisma",
+    "prisma:pull": "npx prisma db pull --schema=./src/db/schema.prisma",
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "npx prisma db seed --preview-feature"
   },
@@ -23,22 +24,18 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@apollo/server": "^4.9.2",
     "@graphql-tools/graphql-file-loader": "^8.0.0",
     "@graphql-tools/load": "^8.0.0",
-    "@graphql-tools/schema": "^10.0.0",
     "@prisma/client": "^5.2.0",
-    "apollo-server-core": "^3.12.0",
-    "apollo-server-express": "^3.12.0",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "express-graphql": "^0.12.0",
     "graphql": "^16.8.0",
-    "graphql-middleware": "^6.1.35",
-    "graphql-shield": "^7.6.5",
     "graphql-tools": "^9.0.0",
     "jsonwebtoken": "^9.0.1",
+    "nodemon": "^3.0.1",
     "pg": "^8.11.3",
-    "prisma": "^5.2.0",
-    "ts-node-dev": "^2.0.0"
+    "prisma": "^5.2.0"
   }
 }

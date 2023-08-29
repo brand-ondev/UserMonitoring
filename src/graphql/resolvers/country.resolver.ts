@@ -1,14 +1,16 @@
+import CountryService from "services/country.service";
+
 const countryResolvers = {
   Query: {
     getAllCountries: async () => {
-      // return prisma.country.findMany();
-    },
+      return await CountryService.getAllCountries();
+    }
+  },
   Country: {
     users: async (parent: any) => {
-      // return prisma.country.findUnique({ where: { id: parent.id } }).users();
+      return await CountryService.getUsersByCountryId(parent.id);
     },
   },
-  }
 };
 
 export default countryResolvers;

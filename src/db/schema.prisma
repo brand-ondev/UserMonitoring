@@ -12,7 +12,7 @@ model Country {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime
-  User      User[]
+  User      User[]   @relation("CountryToUser")
 }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
@@ -20,19 +20,17 @@ model Role {
   id        String        @id
   name      Enum_RoleName
   createdAt DateTime      @default(now())
-  updatedAt DateTime
   User      User[]
 }
 
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
 model Session {
-  id        String   @id
-  expires   DateTime
-  session   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  userId    String?
-  User      User?    @relation(fields: [userId], references: [id])
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  User         User     @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -46,10 +44,10 @@ model User {
   createdAt                  DateTime         @default(now())
   updatedAt                  DateTime
   roleId                     String?
-  UserMonitoring             UserMonitoring[]
-  Country                    Country[]
-  Role                       Role?            @relation(fields: [roleId], references: [id])
   Session                    Session[]
+  Role                       Role?            @relation(fields: [roleId], references: [id])
+  UserMonitoring             UserMonitoring[]
+  Country                    Country[]        @relation("CountryToUser")
 }
 
 model UserMonitoring {
