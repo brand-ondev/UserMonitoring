@@ -137,9 +137,7 @@ Si deseas contenerizar tu backend, sigue estos pasos:
 1. Crea un archivo llamado `Dockerfile` en la raíz del proyecto y copia el contenido proporcionado en la sección anterior.
 2. Abre una terminal y navega al directorio del proyecto.
 3. Ejecuta `docker build -t my-backend-app .` para construir la imagen de Docker.
-4. Ej
-
-ecuta `docker run -p 3000:3000 my-backend-app` para ejecutar el contenedor.
+4. Ejecuta `docker run -p 3000:3000 my-backend-app` para ejecutar el contenedor.
 
 ### Contribución
 
