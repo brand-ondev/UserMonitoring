@@ -16,6 +16,6 @@ COPY dist .
 
 RUN npm install pm2 -g
 
-CMD ["pm2-runtime", "npm run prod"]
+CMD ["pm2-runtime", "npm run start:prod"]
 
 EXPOSE 8080

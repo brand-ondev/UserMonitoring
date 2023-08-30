@@ -1,4 +1,3 @@
-import prisma from "db/prisma";
 import {isValidDate, isValidEmail} from "utils/validations";
 import {GraphQLError} from "graphql";
 import {TopUser} from "types";

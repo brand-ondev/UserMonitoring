@@ -1,6 +1,6 @@
 import { ApolloServer } from "@apollo/server";
-import { typeDefs } from "../src/graphql/types";
-import { resolvers } from "../src/graphql/resolvers";
+import { typeDefs } from "../graphql/types";
+import { resolvers } from "../graphql/resolvers";
 describe('User Resolver', () => {
   it('should return user by email', async () => {
     const testServer = new ApolloServer({
