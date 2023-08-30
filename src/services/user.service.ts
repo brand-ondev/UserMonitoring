@@ -2,7 +2,7 @@ import prisma from "db/prisma";
 import {isValidEmail} from "utils/validations";
 import {GraphQLError} from "graphql";
 import { PrismaClient, User } from "@prisma/client";
-
+import {Pagination} from "types"
 export default class UserService {
 	static async getUserByEmail( email: string, database: PrismaClient) {
 		if (!isValidEmail(email)) {
@@ -16,13 +16,17 @@ export default class UserService {
 		return user[0];
 	}
 
-	static async getAllUsers(database: PrismaClient) {
-		const users =
-			await database.$queryRaw<User[]>`SELECT u.*, r.name as "roleName", c.name as "countryName"
-    FROM "User" u
-    JOIN "Role" r ON u."roleId" = r.id
-    LEFT JOIN "_CountryToUser" cu ON u.id = cu."A"
-    LEFT JOIN "Country" c ON cu."B" = c.id;`;
+	static async getAllUsers(pagination: Pagination, database: PrismaClient) {
+		const { first, offset } = pagination;
+		const users = await database.user.findMany({
+			skip: offset,
+			take: first,
+			include: {
+				Role: true,
+				Country: true,
+			},
+		});
+
     if (!users) {
       throw new GraphQLError("Users not found");
 		}
@@ -46,10 +50,7 @@ export default class UserService {
 
 	static async getRoleByUserId(userid: string) {
 		if (typeof userid !== "string") {
-			return {
-				__typename: "InvalidIdError",
-				message: "Invalid id",
-			};
+			throw new GraphQLError("Invalid ID ");
 		}
 		const role =
 			await prisma.user.findUnique({where: {id: userid}}).Role();

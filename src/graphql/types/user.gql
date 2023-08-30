@@ -20,5 +20,5 @@ type Role {
 
 extend type Query {
   getUserByEmail(email: String!): User!
-  getAllUsers: [User!]!
+  getAllUsers(pagination: Pagination): [User!]!
 }

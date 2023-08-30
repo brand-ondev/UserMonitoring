@@ -8,6 +8,11 @@ type Mutation {
   _empty: String
 }
 
+input Pagination {
+  first: Int
+  offset: Int
+}
+
 schema {
   query: Query
   mutation: Mutation

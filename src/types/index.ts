@@ -1,5 +1,10 @@
 import { PrismaClient, Role } from "@prisma/client";
 
+export interface Pagination {
+  first: number
+  offset: number
+}
+
 export interface MyContext {
 	user?: any;
 	session?: any;

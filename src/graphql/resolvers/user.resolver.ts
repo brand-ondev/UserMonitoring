@@ -1,14 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import UserService from "services/user.service";
-import {MyContext} from "types";
+import {MyContext, Pagination} from "types";
 
 const userResolvers = {
   Query: {
     getUserByEmail: async (_: any,{ email }: any, {database}: MyContext) => {
       return await UserService.getUserByEmail(email, database as PrismaClient);
     },
-    getAllUsers: async (_: any, __: any, {database}: MyContext): Promise<any> => {
-      return await UserService.getAllUsers(database as PrismaClient);
+    getAllUsers: async (_: any, {pagination}: any, {database}: MyContext): Promise<any> => {
+      return await UserService.getAllUsers(pagination as Pagination, database as PrismaClient);
     },
   },
   User: {
