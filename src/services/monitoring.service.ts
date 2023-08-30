@@ -40,8 +40,6 @@ export default class MonitoringService {
 		top.forEach((item) => {
 			item.totalRecords = Number(item.totalRecords);
 		});
-
-		console.log(top);
 		return top;
 	}
 
@@ -70,8 +68,6 @@ export default class MonitoringService {
 		top.forEach((item) => {
 			item.totalRecords = Number(item.totalRecords);
 		});
-
-		console.log(top);
 		return top;
 	}
 }
