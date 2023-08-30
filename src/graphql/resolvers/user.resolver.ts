@@ -1,18 +1,15 @@
-import { createUser } from "graphql/mutations/createUser.mutation";
+import { PrismaClient } from "@prisma/client";
 import UserService from "services/user.service";
+import {MyContext} from "types";
 
 const userResolvers = {
   Query: {
-    getUserByEmail: async ({ email }: any) => {
-      return await UserService.getUserByEmail(email);
+    getUserByEmail: async (_: any,{ email }: any, {database}: MyContext) => {
+      return await UserService.getUserByEmail(email, database as PrismaClient);
     },
-    getAllUsers: async (_: any): Promise<any> => {
-      console.log('getAllUsers');
-      return await UserService.getAllUsers();
+    getAllUsers: async (_: any, __: any, {database}: MyContext): Promise<any> => {
+      return await UserService.getAllUsers(database as PrismaClient);
     },
-  },
-  Mutation: {
-    createUser: createUser,
   },
   User: {
     countries: async (parent: any) => {

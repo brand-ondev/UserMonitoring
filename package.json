@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon --exec ts-node  -r tsconfig-paths/register ./src/server/start.ts",
     "start:prod": "ts-node -r tsconfig-paths/register ./src/server/start.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "prisma": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate --schema=./src/db/schema.prisma",
     "prisma:pull": "npx prisma db pull --schema=./src/db/schema.prisma",

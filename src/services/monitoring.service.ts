@@ -1,59 +1,77 @@
 import prisma from "db/prisma";
-import { isValidDate, isValidEmail } from "utils/validations";
+import {isValidDate, isValidEmail} from "utils/validations";
+import {GraphQLError} from "graphql";
+import {TopUser} from "types";
+import { PrismaClient } from "@prisma/client";
 
 export default class MonitoringService {
 	static async getUserMonitoring(
 		email: string,
 		startDate: string,
-		endDate: string
+		endDate: string,
+		database: PrismaClient
 	) {
-    if (!isValidEmail(email)) {
-      return {
-        __typename: 'InvalidEmailError',
-        message: 'Invalid email'
-      }
-    }
-    if (!isValidDate(startDate) || !isValidDate(endDate)) {
-      return {
-        __typename: 'InvalidDateError',
-        message: 'Invalid date'
-      }
-    }
-		return await prisma.$queryRaw`SELECT * FROM UserMonitoring WHERE email = ${email} AND createdAt BETWEEN ${startDate} AND ${endDate}`;
+		if (!isValidEmail(email)) {
+			throw new GraphQLError("Invalid Email");
+		}
+		if (!isValidDate(startDate) || !isValidDate(endDate)) {
+			throw new GraphQLError("Invalid Date");
+		}
+		return await database.$queryRaw`SELECT u."email", um.*
+    FROM public."UserMonitoring" um
+    JOIN public."User" u ON u."id" = um."userId"
+    WHERE u."email" = ${email} AND um."createdAt" BETWEEN CAST(${startDate} AS timestamp) AND CAST(${endDate} AS timestamp)`;
 	}
 
-	static async getTopUsersByMonitoring(startDate: string, endDate: string) {
-    if (!isValidDate(startDate) || !isValidDate(endDate)) {
-      return {
-        __typename: 'InvalidDateError',
-        message: 'Invalid date'
-      }
-    }
-		return await prisma.$queryRaw`select U.id, U.email, Count(UM.id) as total_records
-    From User U
-    Join UserMonitoring UM on U.id = UM.userId
-    WHERE UM.createdAt >= ${startDate} AND UM.createdAt <= ${endDate}
+	static async getTopUsersByMonitoring(startDate: string, endDate: string,database: PrismaClient) {
+		if (!isValidDate(startDate) || !isValidDate(endDate)) {
+			throw new GraphQLError("Invalid Date");
+		}
+		const top = await database.$queryRaw<
+			TopUser[]
+		>`select U.id, U.email, U.name, Count(UM.id) as "totalRecords"
+    From "User" U
+    Join "UserMonitoring" UM on U.id = UM."userId"
+    WHERE UM."createdAt" BETWEEN CAST(${startDate} AS timestamp) AND CAST(${endDate} AS timestamp)
     GROUP BY U.id, U.email
-    ORDER BY total_records DESC
+    ORDER BY "totalRecords" DESC
     LIMIT 3`;
+
+		top.forEach((item) => {
+			item.totalRecords = Number(item.totalRecords);
+		});
+
+		console.log(top);
+		return top;
 	}
 
 	static async getTopUsersByEventType(
 		countryId: string,
 		eventType: string,
-		startDate: string,
-		endDate: string
+		timestamp: {
+			startDate: string;
+			endDate: string;
+		},
+		database: PrismaClient
 	) {
-		return await prisma.$queryRaw`SELECT U.id, U.email, COUNT(UM.id) as total_records
-    FROM User U
-    JOIN UserMonitoring UM ON U.id = UM.userId
-    JOIN _CountryToUser CTU ON U.id = CTU.userId
-    WHERE UM.eventType = ${eventType}
-      AND CTU.countryId = ${countryId}
-      AND UM.timestamp >= ${startDate} AND UM.timestamp <= ${endDate}
+		const {startDate, endDate} = timestamp;
+		const top =
+			await database.$queryRaw<any[]>`SELECT U.*, COUNT(UM.id) as "totalRecords"
+    FROM "User" U
+    JOIN "UserMonitoring" UM ON U.id = UM."userId"
+    JOIN "_CountryToUser" CTU ON U.id = CTU."B"
+    WHERE UM.description = ${eventType}
+      AND CTU."A" = ${countryId}
+      AND UM."createdAt" BETWEEN CAST(${startDate} AS timestamp) AND CAST(${endDate} AS timestamp)
     GROUP BY U.id, U.email
-    ORDER BY total_records DESC
+    ORDER BY "totalRecords" DESC
     LIMIT 3
     `;
+		top.forEach((item) => {
+			item.totalRecords = Number(item.totalRecords);
+		});
+
+		console.log(top);
+		return top;
 	}
 }

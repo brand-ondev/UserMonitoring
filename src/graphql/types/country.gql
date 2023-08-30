@@ -4,9 +4,6 @@ type Country {
   users: [User!]!
 }
 
-union GetCountry = Country | InvalidIdError | NotFoundError
-
 extend type Query {
   getAllCountries: [Country!]!
-  country(id: String!): Country!
 }

@@ -1,6 +1,13 @@
 type User {
   id: String!
+  name: String!
+  image: String!
+  position: String
   email: String!
+  createdAt: String!
+  updatedAt: String!
+  emailVerified: String
+  termsAndConditionsAccepted: String
   role: Role!
   countries: [Country!]!
   userMonitoring: [UserMonitoring!]!
@@ -11,26 +18,7 @@ type Role {
   name: String!
 }
 
-input UserInput {
-  email: String!
-  roleId: String!
-}
-
-type GetUser {
-  id: String!
-  email: String!
-  role: Role!
-  countries: [Country!]!
-  userMonitoring: [UserMonitoring!]!
-}
-
-union GetUserResult = User | InvalidEmailError | NotFoundError | InvalidDateError
-
 extend type Query {
-  getUserByEmail(email: String!): GetUserResult
+  getUserByEmail(email: String!): User!
   getAllUsers: [User!]!
-}
-
-extend type Mutation {
-  createUser(data: UserInput!): User!
 }
